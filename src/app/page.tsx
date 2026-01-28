@@ -1,65 +1,173 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import {
+  CheckCircle,
+  BarChart3,
+  FileText,
+  Zap,
+} from "lucide-react";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
+  if (session?.user) {
+    redirect("/dashboard");
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      {/* Navigation */}
+      <nav className="border-b bg-white/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            <div className="flex items-center gap-2">
+              <BarChart3 className="h-8 w-8 text-blue-600" />
+              <span className="font-bold text-xl">GBP Audit Tool</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <Link href="/login">
+                <Button variant="ghost">Sign In</Button>
+              </Link>
+              <Link href="/login">
+                <Button>Get Started</Button>
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+      </nav>
+
+      {/* Hero Section */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center">
+          <h1 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+            Optimize Your Google Business Profile
+          </h1>
+          <p className="mt-6 text-lg leading-8 text-gray-600 max-w-2xl mx-auto">
+            Get a comprehensive audit of your Google Business Profile with actionable
+            recommendations to improve your local search visibility and customer engagement.
+          </p>
+          <div className="mt-10 flex items-center justify-center gap-x-6">
+            <Link href="/login">
+              <Button size="lg" className="text-lg px-8 py-6">
+                Start Free Audit
+              </Button>
+            </Link>
+            <Link href="#features">
+              <Button variant="outline" size="lg" className="text-lg px-8 py-6">
+                Learn More
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Features */}
+        <div id="features" className="mt-32">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            Everything You Need to Optimize Your GBP
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <FeatureCard
+              icon={<CheckCircle className="h-8 w-8 text-green-600" />}
+              title="Comprehensive Checklist"
+              description="10 categories covering all aspects of your Google Business Profile optimization."
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <FeatureCard
+              icon={<BarChart3 className="h-8 w-8 text-blue-600" />}
+              title="Scoring System"
+              description="Get a clear score for each category and an overall optimization score."
+            />
+            <FeatureCard
+              icon={<FileText className="h-8 w-8 text-purple-600" />}
+              title="Actionable Insights"
+              description="Specific recommendations on what to fix and how to improve your profile."
+            />
+            <FeatureCard
+              icon={<Zap className="h-8 w-8 text-yellow-600" />}
+              title="Quick Analysis"
+              description="Get results in seconds with our automated audit engine."
+            />
+          </div>
+        </div>
+
+        {/* Checklist Categories Preview */}
+        <div className="mt-32">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            What We Check
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4 max-w-4xl mx-auto">
+            {[
+              "Categories",
+              "Description",
+              "Service Areas",
+              "Business Hours",
+              "Contact Info",
+              "Services",
+              "Products",
+              "Photos",
+              "Posts",
+              "Reviews",
+            ].map((item) => (
+              <div
+                key={item}
+                className="bg-white rounded-lg border p-4 text-center shadow-sm hover:shadow-md transition-shadow"
+              >
+                <span className="font-medium text-gray-700">{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="mt-32 text-center bg-blue-600 rounded-2xl p-12">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Ready to Optimize Your Profile?
+          </h2>
+          <p className="text-blue-100 mb-8 max-w-xl mx-auto">
+            Join thousands of businesses who have improved their local search
+            visibility with our GBP audit tool.
+          </p>
+          <Link href="/login">
+            <Button size="lg" variant="secondary" className="text-lg px-8 py-6">
+              Start Your Free Audit
+            </Button>
+          </Link>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <BarChart3 className="h-6 w-6 text-blue-600" />
+              <span className="font-semibold">GBP Audit Tool</span>
+            </div>
+            <p className="text-sm text-gray-500">
+              &copy; {new Date().getFullYear()} GBP Audit Tool. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="bg-white rounded-xl border p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div className="mb-4">{icon}</div>
+      <h3 className="font-semibold text-lg mb-2">{title}</h3>
+      <p className="text-gray-600 text-sm">{description}</p>
     </div>
   );
 }
